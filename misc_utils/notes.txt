@@ -1,0 +1,28 @@
+
+1. FRAM_RX_LENSMAT => Material Type
+PLASTIC -> CR 39
+POLYCARBONATE will be same
+sample seems to have invalid value as Material type does not have plastic value
+
+2. FRAM_RX_LENSSTYLE => Focal Options => FRAM_RX_LENSGUID
+BF FT-28 -> Straight Top 28 BF
+Single Vision (SV) should be the same
+null value in sample csv
+
+3. FRAM_RX_FRAMESPPLYR => Frame Type
+DR. SUP - TO COME -> New Frame Enclosed
+"DR. SUP - TO COME" ins the sample csv. but the website has a dropdown of these
+three values: Zyl, Metal and Rimlon.
+
+4. FRAM_RX_MPD_RD => Pupillary Distance Far R
+just a typo
+"WV" value in sample but shoulda been a number value
+
+5. Pupillary fields are locked
+
+6. Add Power fields are also locked
+=====
+
+1. seg height => FRAM_RX_OPTCNTRGEO
+2. frame_type => FRAM_RX_FRAMESPPLYR
+3. OC height

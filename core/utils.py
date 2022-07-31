@@ -1,0 +1,68 @@
+from time import sleep
+
+from selenium.common.exceptions import ElementNotInteractableException, NoAlertPresentException, TimeoutException
+from selenium.webdriver import Keys
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+def get_chrome_instance(
+        is_remote: bool = True,
+        is_headless: bool = False,
+        is_notifications_disabled: bool = True,
+) -> WebDriver:
+    """Returns some fancy options for selenium webdriver which makes the browser look like a real browser and not
+    some bot.
+    :param is_notifications_disabled:
+    :param is_remote:
+    :param is_headless:
+    :return: a chrome webdriver instance
+    """
+    options = Options()
+
+    if is_headless:
+        options.add_argument('headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+
+    if is_notifications_disabled:
+        options.add_argument("--disable-notifications")
+
+    options.add_argument("--disable-blink-features")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("start-maximized")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+    if is_remote:
+        driver = webdriver.Remote(
+            command_executor="http://selenium-hub:4444/wd/hub",
+            options=options,
+            desired_capabilities={
+                "browserName": "chrome",
+            },
+        )
+    else:
+        driver = webdriver.Chrome(
+            options=options,
+        )
+    return driver
+
+
+def send_keys_to_element(element, keys):
+    try:
+        element.send_keys(keys)
+    except ElementNotInteractableException:
+        pass
+
+
+def close_alert_pop_ups(dr):
+    try:
+        dr.switch_to.active_element.send_keys(Keys.TAB)
+        WebDriverWait(dr, 0.25).until(EC.alert_is_present())
+        dr.switch_to.alert.accept()
+        sleep(0.1)
+    except (NoAlertPresentException, ElementNotInteractableException, TimeoutException):
+        pass
