@@ -1,0 +1,114 @@
+version: "3.4"
+
+
+services:
+  selenium-hub:
+    image: selenium/hub:3.141.59-20210929
+    container_name: optics_rpa-sh
+    ports:
+      - "4444:4444"
+
+  chrome:
+    image: selenium/node-chrome:3.141.59-20210929
+    container_name: chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=20
+      - NODE_MAX_SESSION=20
+    links:
+      - selenium-hub
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  django:
+    container_name: optics_rpa-dc-01
+    restart: unless-stopped
+    command: gunicorn optics_rpa.wsgi:application --bind 0.0.0.0:8000 --workers 4
+    volumes:
+      - .:/code
+      - optics_rpa_static_volume:/code/static
+      - optics_rpa_media_volume:/code/media
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+      - chrome
+
+  celery:
+    container_name: optics_rpa-cc-01
+    restart: always
+    build:
+      context: .
+    command: bash -c "celery -A optics_rpa worker -l info"
+    volumes:
+      - ./app:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - postgres
+      - django
+      - redis
+
+  celery-beat:
+    container_name: optics_rpa-cb-01
+    build:
+      context: .
+    command: bash -c "celery -A optics_rpa worker -l info --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    depends_on:
+      - postgres
+      - django
+      - redis
+    env_file:
+      - ./.env
+    volumes:
+      - .:/code/
+
+  flower:
+    image: mher/flower:0.9.7
+    container_name: optics_rpa-fc01
+    restart: unless-stopped
+    command:
+      [
+        "flower",
+        "--broker=redis://redis:6379/0",
+        "--broker_api=redis://redis:6379/0",
+        "--port=5555",
+      ]
+    ports:
+      - "5555:5555"
+
+  redis:
+    image: redis
+    container_name: optics_rpa-rc01
+    volumes:
+      - optics_rpa_redis_data:/data
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:13.3-alpine
+    container_name: optics_rpa-pc01
+    env_file:
+      - ./.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - optics_rpa_postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  optics_rpa_postgres_data:
+  optics_rpa_redis_data:
+  optics_rpa_static_volume:
+  optics_rpa_media_volume:
