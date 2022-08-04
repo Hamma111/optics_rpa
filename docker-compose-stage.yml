@@ -31,6 +31,7 @@ services:
 
   django:
     container_name: optics_rpa-dc-01
+    build: .
     restart: unless-stopped
     command: gunicorn optics_rpa.wsgi:application --bind 0.0.0.0:8000 --workers 4
     volumes:
