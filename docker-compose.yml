@@ -56,7 +56,7 @@ services:
     restart: always
     build:
       context: .
-    command: bash -c "celery -A optics_rpa worker -l info"
+    command: bash -c "celery -A config worker -l info"
     volumes:
       - ./app:/app
     env_file:
@@ -70,7 +70,7 @@ services:
     container_name: optics_rpa-cb-01
     build:
       context: .
-    command: bash -c "celery -A optics_rpa worker -l info --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    command: bash -c "celery -A config worker -l info --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     depends_on:
       - postgres
       - django

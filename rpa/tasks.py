@@ -1,7 +1,7 @@
 import pandas as pd
 
 from core.utils import get_chrome_instance
-from optics_rpa.celery import app
+from config.celery import app
 from rpa.models import OpticalPIAOrder
 from rpa.optical_pia import OpticalPIAScraper
 
