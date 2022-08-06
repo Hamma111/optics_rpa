@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # custom apps
     "core",
     "rpa",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -61,6 +62,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+AUTH_USER_MODEL = "users.User"
 
 TEMPLATES = [
     {
