@@ -1,0 +1,11 @@
+version: "3.4"
+
+services:
+  cr:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.cr
+    container_name: blabble-cr01
+    command: bash -c "/code/scripts/cr.sh"
+    volumes:
+      - ./:/code

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # third party package
     "django_celery_beat",
     "storages",
+    "constance",
 
     # custom apps
     "core",
@@ -171,3 +172,10 @@ OPTICAL_PIA_PASSWORD = "Rayban2018"
 
 OPTICAL_PIA_LOGIN_URL = "https://optical.pia.ca.gov/pool/Login.aspx"
 OPTICAL_PIA_START_ORDER_URL = "https://optical.pia.ca.gov/Pool/ServiceProvider/VerifyEligibility.aspx"
+
+
+CONSTANCE_BACKEND = "constance.backends.redisd.RedisBackend"
+CONSTANCE_REDIS_CONNECTION = f"{REDIS_HOST}://{REDIS_HOST}:{REDIS_PORT}/0"
+CONSTANCE_REDIS_PREFIX = "constance:optics_rpa:"
+
+from .constance import *

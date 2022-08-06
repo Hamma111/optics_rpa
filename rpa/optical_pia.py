@@ -1,7 +1,7 @@
 from time import sleep
 from typing import List
 
-from django.conf import settings
+from constance import config
 from selenium.webdriver.common.by import By
 
 from core.utils import send_keys_to_element, close_alert_pop_ups
@@ -13,19 +13,19 @@ class OpticalPIAScraper:
         self.dr = dr
 
     def login(self):
-        self.dr.get(settings.OPTICAL_PIA_LOGIN_URL)
+        self.dr.get(config.OPTICAL_PIA_LOGIN_URL)
 
         userid_element = self.dr.find_element(By.ID, "txtUserID")
         password_element = self.dr.find_element(By.ID, "txtPassword")
         submit_element = self.dr.find_element(By.XPATH, "//input[@type='submit']")
 
-        userid_element.send_keys(settings.OPTICAL_PIA_USERID)
-        password_element.send_keys(settings.OPTICAL_PIA_PASSWORD)
+        userid_element.send_keys(config.OPTICAL_PIA_USERID)
+        password_element.send_keys(config.OPTICAL_PIA_PASSWORD)
         submit_element.click()
-        assert self.dr.current_url != settings.OPTICAL_PIA_LOGIN_URL
+        assert self.dr.current_url != config.OPTICAL_PIA_LOGIN_URL
 
     def _start_order(self, order: OpticalPIAOrder):
-        self.dr.get(settings.OPTICAL_PIA_START_ORDER_URL)
+        self.dr.get(config.OPTICAL_PIA_START_ORDER_URL)
         self.dr.find_element(By.ID, "txtMediCalID").send_keys(order.subscriber_id)
         self.dr.find_element(By.ID, "txtDateofBirth").send_keys(order.subscriber_birthdate)
         self.dr.find_element(By.ID, "txtDateofIssue").send_keys(order.issue_date)
