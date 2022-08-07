@@ -134,6 +134,7 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - optics_rpa_static_volume:/code/static
       - optics_rpa_media_volume:/code/media
