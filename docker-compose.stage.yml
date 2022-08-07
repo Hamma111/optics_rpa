@@ -1,5 +1,16 @@
 version: "3.4"
 
+x-common: &common
+  stdin_open: true
+  tty: true
+  restart: unless-stopped
+  networks:
+    - optics_rpa
+
+x-django-build: &django-build
+  build:
+    context: .
+    dockerfile: Dockerfile.stage
 
 services:
   selenium-hub:
@@ -7,6 +18,7 @@ services:
     container_name: optics_rpa-sh
     ports:
       - "4444:4444"
+    <<: *common
 
   chrome:
     image: selenium/node-chrome:3.141.59-20210929
@@ -22,6 +34,8 @@ services:
       - NODE_MAX_SESSION=20
     links:
       - selenium-hub
+    <<: *common
+
   certbot:
     image: certbot/certbot
     volumes:
@@ -30,8 +44,8 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   django:
+    <<: *django-build
     container_name: optics_rpa-dc-01
-    build: .
     restart: unless-stopped
     command: gunicorn optics_rpa.wsgi:application --bind 0.0.0.0:8000 --workers 4
     volumes:
@@ -46,12 +60,12 @@ services:
       - postgres
       - redis
       - chrome
+    <<: *common
 
   celery:
+    <<: *django-build
     container_name: optics_rpa-cc-01
     restart: always
-    build:
-      context: .
     command: bash -c "celery -A optics_rpa worker -l info"
     volumes:
       - ./app:/app
@@ -61,11 +75,11 @@ services:
       - postgres
       - django
       - redis
+    <<: *common
 
   celery-beat:
+    <<: *django-build
     container_name: optics_rpa-cb-01
-    build:
-      context: .
     command: bash -c "celery -A optics_rpa worker -l info --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     depends_on:
       - postgres
@@ -75,6 +89,7 @@ services:
       - ./.env
     volumes:
       - .:/code/
+    <<: *common
 
   flower:
     image: mher/flower:0.9.7
@@ -89,6 +104,7 @@ services:
       ]
     ports:
       - "5555:5555"
+    <<: *common
 
   redis:
     image: redis
@@ -97,6 +113,7 @@ services:
       - optics_rpa_redis_data:/data
     ports:
       - "6379:6379"
+    <<: *common
 
   postgres:
     image: postgres:13.3-alpine
@@ -107,6 +124,7 @@ services:
       - "5432:5432"
     volumes:
       - optics_rpa_postgres_data:/var/lib/postgresql/data/
+    <<: *common
 
 volumes:
   optics_rpa_postgres_data:
