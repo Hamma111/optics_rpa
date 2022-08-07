@@ -126,6 +126,10 @@ services:
       - optics_rpa_postgres_data:/var/lib/postgresql/data/
     <<: *common
 
+networks:
+  optics_rpa:
+    driver: bridge
+
 volumes:
   optics_rpa_postgres_data:
   optics_rpa_redis_data:
