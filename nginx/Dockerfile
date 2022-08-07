@@ -1,3 +1,4 @@
-FROM nginx:1.20.1
-COPY --from=builder /app/build /etc/nginx/html/
-CMD ["sudo", "nginx", "-g", "daemon off;"]
+FROM nginx:1.21-alpine
+
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d
