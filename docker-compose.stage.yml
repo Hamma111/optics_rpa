@@ -126,6 +126,25 @@ services:
       - optics_rpa_postgres_data:/var/lib/postgresql/data/
     <<: *common
 
+  nginx:
+    build:
+      context: .
+      dockerfile: ./config/nginx/Dockerfile
+    container_name: optics_rpa-nc01
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/stage.conf:/etc/nginx/conf.d/default.conf
+      - optics_rpa_static_volume:/code/static
+      - optics_rpa_media_volume:/code/media
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+      - django
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    <<: *common
+
 networks:
   optics_rpa:
     driver: bridge
