@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.cr
-    container_name: blabble-cr01
+    container_name: optics_rpa-cr01
     command: bash -c "/code/scripts/cr.sh"
     volumes:
       - ./:/code
