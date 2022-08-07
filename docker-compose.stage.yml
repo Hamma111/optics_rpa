@@ -129,7 +129,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: ./config/nginx/Dockerfile
+      dockerfile: ./nginx/Dockerfile
     container_name: optics_rpa-nc01
     restart: unless-stopped
     ports:
