@@ -45,11 +45,13 @@ INSTALLED_APPS = [
     "django_celery_beat",
     "storages",
     "constance",
+    "django_extensions",
 
     # custom apps
     "core",
     "rpa",
     "users",
+    "submissions",
 ]
 
 MIDDLEWARE = [
@@ -69,7 +71,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -184,3 +186,5 @@ CONSTANCE_REDIS_CONNECTION = f"{REDIS_HOST}://{REDIS_HOST}:{REDIS_PORT}/0"
 CONSTANCE_REDIS_PREFIX = "constance:optics_rpa:"
 
 from .constance import *
+
+FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHandler',]
