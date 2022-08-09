@@ -119,12 +119,12 @@ services:
       - optics_rpa_postgres_data:/var/lib/postgresql/data/
     <<: *common
 
-#  certbot:
-#    image: certbot/certbot
+  certbot:
+    image: certbot/certbot
 #    volumes:
 #      - ./data/certbot/conf:/etc/letsencrypt
 #      - ./data/certbot/www:/var/www/certbot
-#    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   nginx:
     build:
