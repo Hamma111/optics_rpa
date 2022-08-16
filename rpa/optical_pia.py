@@ -1,11 +1,14 @@
+from io import BytesIO
 from time import sleep
 from typing import List
 
 from constance import config
+from django.core.files.images import ImageFile
 from selenium.webdriver.common.by import By
 
 from core.utils import send_keys_to_element, close_alert_pop_ups
 from rpa.models import OpticalPIAOrder
+from submissions.choices import StatusType
 
 
 class OpticalPIAScraper:
@@ -38,8 +41,9 @@ class OpticalPIAScraper:
             raise Exception(f"Invalid Gender value in order {order}")
 
         self.dr.find_element(By.ID, "butVerifyEligibility").click()
+        self.save_screenshot(order, "screenshot1")
 
-    def place_order(self, order):
+    def _place_order(self, order):
         self._start_order(order)
 
         self.dr.find_element(By.ID, "ddlMaterialType").send_keys(order.material_type)
@@ -92,6 +96,20 @@ class OpticalPIAScraper:
         self.dr.find_element(By.ID, "selFrameMaterial").send_keys(order.frame_type)
 
         self.dr.find_element(By.ID, "chkCertifiedSOC").click()
+        self.save_screenshot(order, "screenshot2")
+
+    def place_order(self, order):
+        try:
+            self._place_order(order)
+            order_submission = order.submission.get(status=StatusType.PENDING)
+            order_submission.status = StatusType.SUCCESS
+        except Exception as ex:
+            self.save_screenshot(order, "error_screenshot")
+            order_submission = order.submission.get(status=StatusType.PENDING)
+            order_submission.status = StatusType.ERROR
+            order_submission.error_text = ex
+
+        order_submission.save(update_fields=["status", "error_text"])
 
     def place_orders(self, optical_pia_orders: List[OpticalPIAOrder]):
         for index, order in enumerate(optical_pia_orders):
@@ -100,3 +118,13 @@ class OpticalPIAScraper:
                 self.dr.save_screenshot(f'success_{index}.png')
             except Exception as ex:
                 self.dr.save_screenshot(f'error_{index}.jpg')
+
+    def save_screenshot(self, order, image_field):
+        order_submission = order.submission.get(status=StatusType.PENDING)
+
+        image = self.dr.get_screenshot_as_png()
+        image = ImageFile(BytesIO(image), name=f'{order_submission.id}.jpg')
+
+        setattr(order_submission, image_field, image)
+        order_submission.save(update_fields=[image_field])
+

@@ -1,48 +1,49 @@
-from dataclasses import dataclass
 from datetime import date
 
+from django.db import models
+
 from rpa.utils import mutate_optical_pia_order
+from submissions.choices import StatusType
 
 
-@dataclass
-class OpticalPIAOrder:
-    subscriber_id: str
-    subscriber_birthdate: str
-    service_date: str
-    issue_date: str
-    gender: str
+class OpticalPIAOrder(models.Model):
+    subscriber_id = models.CharField(max_length=255)
+    subscriber_birthdate = models.CharField(max_length=255)
+    service_date = models.CharField(max_length=255)
+    issue_date = models.CharField(max_length=255)
+    gender = models.CharField(max_length=255)
 
-    material_type: str
-    focal_options: str
+    material_type = models.CharField(max_length=255)
+    focal_options = models.CharField(max_length=255)
 
-    sphere_r: str
-    sphere_l: str
-    cylinder_r: str
-    cylinder_l: str
-    axis_l: str
-    axis_r: str
-    pupillary_far_r: str
-    pupillary_far_l: str
-    pupillary_near_l: str
-    pupillary_near_r: str
+    sphere_r = models.CharField(max_length=255)
+    sphere_l = models.CharField(max_length=255)
+    cylinder_r = models.CharField(max_length=255)
+    cylinder_l = models.CharField(max_length=255)
+    axis_l = models.CharField(max_length=255)
+    axis_r = models.CharField(max_length=255)
+    pupillary_far_r = models.CharField(max_length=255)
+    pupillary_far_l = models.CharField(max_length=255)
+    pupillary_near_l = models.CharField(max_length=255)
+    pupillary_near_r = models.CharField(max_length=255)
 
-    add_power_r: str
-    add_power_l: str
-    seg_height_l: str
-    seg_height_r: str
-    oc_height_l: str
-    oc_height_r: str
+    add_power_r = models.CharField(max_length=255)
+    add_power_l = models.CharField(max_length=255)
+    seg_height_l = models.CharField(max_length=255)
+    seg_height_r = models.CharField(max_length=255)
+    oc_height_l = models.CharField(max_length=255)
+    oc_height_r = models.CharField(max_length=255)
 
-    frame_enclosed: str
+    frame_enclosed = models.CharField(max_length=255)
 
-    frame_manufacturer: str
-    frame_style: str
-    eye_size: str
-    bridge_size: str
-    temple_size: str
-    color: str
+    frame_manufacturer = models.CharField(max_length=255)
+    frame_style = models.CharField(max_length=255)
+    eye_size = models.CharField(max_length=255)
+    bridge_size = models.CharField(max_length=255)
+    temple_size = models.CharField(max_length=255)
+    color = models.CharField(max_length=255)
 
-    frame_type: str
+    frame_type = models.CharField(max_length=255)
 
     @classmethod
     def object_from_csv_date(cls, csv_data, mutate=True):

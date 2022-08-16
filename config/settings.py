@@ -155,6 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REDIS_HOST = get_env_variable("REDIS_HOST")
 REDIS_PORT = get_env_variable("REDIS_PORT")
 
+# Celery Settings
 CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
 CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}"
 CELERY_ACCEPT_CONTENT = [
@@ -163,6 +164,7 @@ CELERY_ACCEPT_CONTENT = [
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
+# AWS Settings
 AWS_ACCESS_KEY_ID = get_env_variable("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = get_env_variable("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = get_env_variable("AWS_STORAGE_BUCKET_NAME")
@@ -170,17 +172,17 @@ AWS_S3_ENDPOINT_URL = get_env_variable("AWS_S3_ENDPOINT_URL")
 AWS_S3_OBJECT_PARAMETERS = {
     "CacheControl": "max-age=86400",
 }
-AWS_MEDIA_FILES_LOCATION = get_env_variable("AWS_MEDIA_FILES_LOCATION")
+AWS_MEDIA_FILES_LOCATION = "media-files"
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = True
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+# AWS_S3_ADDRESSING_STYLE = 'virtual'
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
+MEDIA_ROOT = BASE_DIR / "media"  # noqa
+MEDIA_URL = f"https://{AWS_S3_ENDPOINT_URL}/{AWS_MEDIA_FILES_LOCATION}/"
 
-OPTICAL_PIA_USERID = "1387"
-OPTICAL_PIA_PASSWORD = "Rayban2018"
-
-OPTICAL_PIA_LOGIN_URL = "https://optical.pia.ca.gov/pool/Login.aspx"
-OPTICAL_PIA_START_ORDER_URL = "https://optical.pia.ca.gov/Pool/ServiceProvider/VerifyEligibility.aspx"
-
-
+# Constance settings
 CONSTANCE_BACKEND = "constance.backends.redisd.RedisBackend"
 CONSTANCE_REDIS_CONNECTION = f"{REDIS_HOST}://{REDIS_HOST}:{REDIS_PORT}/0"
 CONSTANCE_REDIS_PREFIX = "constance:optics_rpa:"
@@ -188,3 +190,5 @@ CONSTANCE_REDIS_PREFIX = "constance:optics_rpa:"
 from .constance import *
 
 FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHandler',]
+
+LOGIN_URL = "users:login"

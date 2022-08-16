@@ -1,9 +1,9 @@
 from django.urls import path
 
-from submissions.views import SubmissionView
+from submissions.views import UploadSubmissionView
 
 app_name = "submissions"
 
 urlpatterns = [
-    path("submission/", SubmissionView.as_view(), name="submission")
+    path("submission/", UploadSubmissionView.as_view(), name="upload-submission"),
 ]

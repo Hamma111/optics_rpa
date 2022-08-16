@@ -15,5 +15,3 @@ app.config_from_object(settings, namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {}
-
-from rpa import tasks

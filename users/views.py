@@ -10,7 +10,7 @@ class LoginView(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("submissions:submission")
+            return redirect("submissions:upload-submission")
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
@@ -20,7 +20,7 @@ class LoginView(View):
             user = authenticate(**login_form.cleaned_data)
             if user:
                 login(request, user)
-                return redirect("submissions:submission")
+                return redirect("submissions:upload-submission")
             else:
                 context["error_message"] = "Invalid credentials"
 

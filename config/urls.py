@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from rpa.views import index_page
+from users.views import LoginView
+
 
 urlpatterns = [
+    path('', LoginView.as_view()),
     path('admin-portal/', admin.site.urls),
     path('users/', include("users.urls"), ),
     path('submissions/', include("submissions.urls"), ),
