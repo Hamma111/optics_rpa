@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from rpa.utils import mutate_optical_pia_order
@@ -62,21 +63,22 @@ class OpticalPIAOrder(models.Model):
         focal_options_lookup = {
             "STRAIGHT TOP 28 BF": "Straight Top 28 BF",
             "BF FT-28 POLY": "Straight Top 28 BF",
-            "Single Vision (SV)": "Single Vision (SV)"
+            "SINGLE VISION (SV)": "Single Vision (SV)"
         }
         try:
-            focal_options = focal_options_lookup[csv_data["FRAM_RX_LENSGUID"]]
+            focal_options = focal_options_lookup[csv_data["FRAM_RX_FOCALGUID"].upper()]
         except KeyError:
-            error_msg = f"Received invalid Focal Option (FRAM_RX_LENSGUID) in csv row: {csv_data}"
-            raise Exception(error_msg)
+            error_msg = f"Received invalid Focal Option (FRAM_RX_FOCALGUID) in csv row: {csv_data}"
+            raise ValidationError(error_msg)
 
         frame_type_lookup = {
-            "DR. SUP - TO COME": "New Frame Enclosed",
+            "ZYL": "Zyl",
+            "METAL": "Metal",
         }
         try:
-            frame_type = frame_type_lookup[csv_data["FRAM_RX_FRAMESPPLYR"]]
+            frame_type = frame_type_lookup[csv_data["FRAM_RX_FRAMEMAT"].upper()]
         except KeyError:
-            error_msg = f"Received invalid Frame Type (FRAM_RX_FRAMESPPLYR) in csv row: {csv_data}"
+            error_msg = f"Received invalid Frame Type (FRAM_RX_FRAMEMAT) in csv row: {csv_data}"
             raise Exception(error_msg)
 
         order = OpticalPIAOrder(
@@ -117,7 +119,7 @@ class OpticalPIAOrder(models.Model):
             temple_size=csv_data["FRAM_RX_TEMPLE"],
             color=csv_data["FRAM_RX_FRAM_CLR"],
 
-            frame_type=csv_data['FRAM_RX_FRAMEMAT'],
+            frame_type=frame_type,
         )
 
         if mutate:
