@@ -27,7 +27,7 @@ class OpticalPIAOrderSubmissionAdmin(admin.ModelAdmin):
         'screenshot1',
         'screenshot2',
         'error_screenshot',
-        'error_text',
         'status',
+        'error_text',
     )
     list_filter = ('created', 'modified', 'optical_pia_order', 'submission')

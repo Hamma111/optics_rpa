@@ -27,7 +27,7 @@ class OpticalPIAOrderSubmission(TimeStampedModel):
     screenshot1 = models.ImageField(null=True, blank=True, upload_to="optical-screenshot1/%Y-%m/")
     screenshot2 = models.ImageField(null=True, blank=True, upload_to="optical-screenshot2/%Y-%m/")
     error_screenshot = models.ImageField(null=True, blank=True, upload_to="error-screenshot/%Y-%m/")
-    error_text = models.CharField(max_length=255, null=True, blank=True)
+    error_text = models.CharField(max_length=5000, null=True, blank=True)
     status = models.CharField(max_length=255, choices=StatusType.choices, default=StatusType.PENDING)
 
     optical_pia_order = models.ForeignKey("rpa.OpticalPIAOrder", on_delete=models.PROTECT, related_name="submission")
