@@ -14,6 +14,7 @@ from submissions.models import Submission, OpticalPIAOrderSubmission
 def place_optical_pia_order(submission_id):
     submission = Submission.objects.get(id=submission_id)
     df = pd.read_csv(submission.file.open("r"), dtype="str")
+    df.fillna("", inplace=True)
 
     orders = []
     order_submissions = []

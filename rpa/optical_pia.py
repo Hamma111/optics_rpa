@@ -47,6 +47,8 @@ class OpticalPIAScraper:
         self._start_order(order)
 
         self.dr.find_element(By.ID, "ddlMaterialType").send_keys(order.material_type)
+        close_alert_pop_ups(self.dr, 2, 2, attempt_jumping_to_next_element=False)
+        close_alert_pop_ups(self.dr, 2)
 
         self.dr.find_element(By.ID, "ddlFocalOptions").send_keys(order.focal_options)
 
@@ -58,12 +60,12 @@ class OpticalPIAScraper:
         self.dr.find_element(By.ID, "txtLCylinder").send_keys(order.cylinder_l)
 
         close_alert_pop_ups(self.dr)
-        self.dr.find_element(By.ID, "txtRAxis").send_keys(order.axis_r)
-        self.dr.find_element(By.ID, "txtLAxis").send_keys(order.axis_l)
+        send_keys_to_element(self.dr.find_element(By.ID, "txtRAxis"), order.axis_r)
+        send_keys_to_element(self.dr.find_element(By.ID, "txtLAxis"), order.axis_l)
 
         close_alert_pop_ups(self.dr)
-        self.dr.find_element(By.ID, "txtRFar").send_keys(order.pupillary_far_r)
-        self.dr.find_element(By.ID, "txtLFar").send_keys(order.pupillary_far_l)
+        send_keys_to_element(self.dr.find_element(By.ID, "txtRFar"), order.pupillary_far_r)
+        send_keys_to_element(self.dr.find_element(By.ID, "txtLFar"), order.pupillary_far_l)
 
         close_alert_pop_ups(self.dr)
         send_keys_to_element(self.dr.find_element(By.ID, "txtRNear"), order.pupillary_near_r)

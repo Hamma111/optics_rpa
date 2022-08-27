@@ -58,11 +58,17 @@ def send_keys_to_element(element, keys):
         pass
 
 
-def close_alert_pop_ups(dr):
+def close_alert_pop_ups(
+        dr,
+        alert_preset_wait_in_seconds=0.25,
+        post_alert_preset_wait_in_seconds=0.25,
+        attempt_jumping_to_next_element=True
+):
     try:
-        dr.switch_to.active_element.send_keys(Keys.TAB)
-        WebDriverWait(dr, 0.25).until(EC.alert_is_present())
+        if attempt_jumping_to_next_element:
+            dr.switch_to.active_element.send_keys(Keys.TAB)
+        WebDriverWait(dr, alert_preset_wait_in_seconds).until(EC.alert_is_present())
         dr.switch_to.alert.accept()
-        sleep(0.1)
+        sleep(post_alert_preset_wait_in_seconds)
     except (NoAlertPresentException, ElementNotInteractableException, TimeoutException):
         pass
