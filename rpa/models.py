@@ -105,10 +105,10 @@ class OpticalPIAOrder(models.Model):
 
             add_power_r=csv_data["FRAM_RX_R_ADD"],
             add_power_l=csv_data["FRAM_RX_L_ADD"],
-            seg_height_r=csv_data["FRAM_RX_OPTCNTRGEO"] or 0,
-            seg_height_l=csv_data["FRAM_RX_OPTCNTRGEO"] or 0,
-            oc_height_r=csv_data["FRAM_RX_FRAMEMAT"],
-            oc_height_l=csv_data["FRAM_RX_FRAMEMAT"],
+            seg_height_r=csv_data["FRAM_RX_SEGHGHTGEO"],
+            seg_height_l=csv_data["FRAM_RX_SEGHGHTGEO"],
+            oc_height_r=csv_data["FRAM_RX_OPTCNTRGEO"] or 0,
+            oc_height_l=csv_data["FRAM_RX_OPTCNTRGEO"] or 0,
 
             frame_enclosed=frame_enclosed,
 
