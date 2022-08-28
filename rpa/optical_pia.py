@@ -40,8 +40,8 @@ class OpticalPIAScraper:
         else:
             raise Exception(f"Invalid Gender value in order {order}")
 
-        self.dr.find_element(By.ID, "butVerifyEligibility").click()
         self.save_screenshot(order, "screenshot1")
+        self.dr.find_element(By.ID, "butVerifyEligibility").click()
 
     def _place_order(self, order):
         self._start_order(order)
