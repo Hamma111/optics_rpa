@@ -26,3 +26,8 @@ just a typo
 1. seg height => FRAM_RX_OPTCNTRGEO
 2. frame_type => FRAM_RX_FRAMESPPLYR
 3. OC height
+
+
+Report2:
+--# of submissions per person
+--# error reporting
