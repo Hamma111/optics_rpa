@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 import pandas as pd
 
-from rpa.tasks import place_optical_pia_order
+from rpa.tasks import place_optical_pia_order, place_iehp_order
 from submissions.choices import SubmissionType
 from submissions.models import Submission
 
@@ -58,6 +58,6 @@ class UploadIEHPSubmissionView(View):
             raise Exception(ex)
         submission = Submission.objects.create(file=csv_file, user=request.user, type=SubmissionType.IEHP)
 
-        place_optical_pia_order.delay(submission.id)
+        place_iehp_order.delay(submission.id)
 
         return render(request, self.template_name)

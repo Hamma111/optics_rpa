@@ -51,7 +51,7 @@ def place_iehp_order(submission_id):
     for patient_data in df.to_dict(orient='records'):
         order = IEHPOrder.object_from_csv_date(patient_data)
         orders.append(order)
-        order_submissions.append(IEHPOrder(optical_pia_order=order, submission=submission))
+        order_submissions.append(IEHPOrderSubmission(iehp_order=order, submission=submission))
 
     IEHPOrder.objects.bulk_create(orders, batch_size=1000)
     IEHPOrderSubmission.objects.bulk_create(order_submissions, batch_size=1000)
