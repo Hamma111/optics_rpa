@@ -126,3 +126,41 @@ class OpticalPIAOrder(models.Model):
             order = mutate_optical_pia_order(order)
 
         return order
+
+
+class IEHPOrder(models.Model):
+    iehp_id = models.CharField(max_length=255)
+    service_priority = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+
+    services_requested = models.CharField(max_length=255)
+    icd_1 = models.CharField(max_length=255)
+
+    materials_services = models.CharField(max_length=255)
+    material_options = models.CharField(max_length=255)
+
+    lens_cpt_1 = models.CharField(max_length=255)
+    lens_qty = models.CharField(max_length=255)
+
+    frame_cpt_1 = models.CharField(max_length=255)
+    frame_qty = models.CharField(max_length=255)
+
+    @classmethod
+    def object_from_csv_date(cls, csv_data):
+        return cls(
+            iehp_id=csv_data["IEHP_ID"],
+            service_priority=csv_data["SERVICE_PRIORITY"],
+            location=csv_data["LOCATION"],
+
+            services_requested=csv_data["SERVICES_REQUESTED"],
+            icd_1=csv_data["ICD_1"],
+
+            materials_services=csv_data["MATERIAL_SERVICES"],
+            material_options=csv_data["MATERIAL_OPTIONS"],
+
+            lens_cpt_1=csv_data["LENS_CPT_1"],
+            lens_qty=csv_data["LENS_QTY"],
+
+            frame_cpt_1=csv_data["FRAME_CPT_1"],
+            frame_qty=csv_data["FRAME_QTY"],
+        )

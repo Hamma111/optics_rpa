@@ -1,9 +1,10 @@
 from django.urls import path
 
-from submissions.views import UploadSubmissionView
+from submissions.views import UploadOpticalPIASubmissionView, UploadIEHPSubmissionView
 
 app_name = "submissions"
 
 urlpatterns = [
-    path("submission/", UploadSubmissionView.as_view(), name="upload-submission"),
+    path("submission/optical-pia", UploadOpticalPIASubmissionView.as_view(), name="upload-optical-pia-submission"),
+    path("submission/iehp", UploadIEHPSubmissionView.as_view(), name="upload-iehp-submission"),
 ]

@@ -19,4 +19,14 @@ CONSTANCE_CONFIG = {
         "Place order URL for Optical PIA.",
         str,
     ),
+    "IEHP_LOGIN_URL": (
+        "https://ewebapp.iehp.org/ProviderPortal/vision/vision-claims-entry-form/h2216251479",
+        "Login URL for IEHP",
+        str,
+    ),
+    "IEHP_VISION_REFERRAL_REQUEST_FORM_URL": (
+        "https://ewebapp.iehp.org/ProviderPortal/vision/vision-authorization-request",
+        "Vision referral request form for IEHP",
+        str,
+    ),
 }
