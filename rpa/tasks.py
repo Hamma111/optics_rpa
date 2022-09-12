@@ -58,10 +58,11 @@ def place_iehp_order(submission_id):
 
     # running automation
     dr = get_chrome_instance(is_headless=True)
+
     iehp_scraper = IEHPScraper(dr)
     iehp_scraper.login()
-
     iehp_scraper.place_vision_referral_requests(orders)
+
     try:
         dr.quit()
     except:
