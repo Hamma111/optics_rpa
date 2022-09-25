@@ -3,6 +3,7 @@ from time import sleep
 from typing import List
 
 from constance import config
+from django.conf import settings
 from django.core.files.images import ImageFile
 from selenium.webdriver.common.by import By
 
@@ -22,8 +23,8 @@ class OpticalPIAScraper:
         password_element = self.dr.find_element(By.ID, "txtPassword")
         submit_element = self.dr.find_element(By.XPATH, "//input[@type='submit']")
 
-        userid_element.send_keys(config.OPTICAL_PIA_USERID)
-        password_element.send_keys(config.OPTICAL_PIA_PASSWORD)
+        userid_element.send_keys(settings.OPTICAL_PIA_USERID)
+        password_element.send_keys(settings.OPTICAL_PIA_PASSWORD)
         submit_element.click()
         assert self.dr.current_url != config.OPTICAL_PIA_LOGIN_URL
 

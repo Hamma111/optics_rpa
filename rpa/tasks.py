@@ -1,7 +1,4 @@
-from io import BytesIO
-
 import pandas as pd
-from django.core.files.images import ImageFile
 
 from core.utils import get_chrome_instance
 from config.celery import app

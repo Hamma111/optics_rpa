@@ -31,3 +31,16 @@ just a typo
 Report2:
 --# of submissions per person
 --# error reporting
+
+
+Lenses quaty is always 2
+hard code these things:
+- replacement of lost stole
+- modifier
+- lens qty 2
+- frame qty 2
+- check yellow boxes
+
+
+reports
+- Per employee, how many claims per day and per week, per month

@@ -4,6 +4,8 @@ from time import sleep
 from typing import List
 
 from constance import config
+from django.conf import settings
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -22,10 +24,10 @@ class IEHPScraper:
 
         WebDriverWait(self.dr, 10).until(
             EC.visibility_of_element_located((By.NAME, "username"))
-        ).send_keys("FDIndio")
+        ).send_keys(settings.IEHP_LOGIN_ID)
         WebDriverWait(self.dr, 10).until(
             EC.visibility_of_element_located((By.NAME, "password"))
-        ).send_keys("Eyesee01*")
+        ).send_keys(settings.IEHP_PASSWORD)
         WebDriverWait(self.dr, 10).until(
             EC.presence_of_element_located((By.XPATH, "//button[contains(text(), 'Log In')]"))
         ).click()
@@ -38,21 +40,32 @@ class IEHPScraper:
             EC.presence_of_element_located((By.ID, "memberID"))
         ).send_keys(order.iehp_id)
         WebDriverWait(self.dr, 10).until(
-            EC.element_to_be_clickable((By.XPATH, f"//label[contains(text(), '{order.service_priority}')]"))
+            EC.element_to_be_clickable((By.XPATH, f"//label[contains(text(), 'Standard Post-Service')]"))
         ).click()
         WebDriverWait(self.dr, 10).until(EC.element_to_be_clickable((By.ID, "postdos"))).click()
-        WebDriverWait(self.dr, 10).until(EC.element_to_be_clickable(
-            (By.XPATH, f"//a[@ng-repeat='item in days' and contains(text(), '{datetime.utcnow().day - 1}')]"))
-        ).click()
+
+        day = order.appointment_date.split("/")[1]
+        try:
+            WebDriverWait(self.dr, 10).until(EC.element_to_be_clickable(
+                (By.XPATH, f"//a[@ng-repeat='item in days' and contains(text(), '{day}')]"))
+            ).click()
+        except TimeoutException as e:
+            print(f"error {e} with {order.__dict__} in IEHP appt date selection.")
+            WebDriverWait(self.dr, 1).until(EC.element_to_be_clickable(
+                (By.XPATH, f"//a[@ng-click='prevMonth()']"))
+            ).click()
+            WebDriverWait(self.dr, 10).until(EC.element_to_be_clickable(
+                (By.XPATH, f"//a[@ng-repeat='item in days' and contains(text(), '{day}')]"))
+            ).click()
 
         sleep(5)
 
         WebDriverWait(self.dr, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//input[@title='Please Select A Requesting Provider']"))
         ).click()
-        WebDriverWait(self.dr, 10).until(EC.element_to_be_clickable((By.ID, "providerSearchInput"))).send_keys(
-            order.location
-        )
+        WebDriverWait(self.dr, 10).until(
+            EC.element_to_be_clickable((By.ID, "providerSearchInput"))
+        ).send_keys(order.requesting_provider)
         WebDriverWait(self.dr, 5).until(
             EC.element_to_be_clickable((By.XPATH, f"//span[contains(text(), '{order.location}')]"))
         ).click()
@@ -63,7 +76,7 @@ class IEHPScraper:
         ).click()
 
         WebDriverWait(self.dr, 10).until(
-            EC.element_to_be_clickable((By.XPATH, f"//label[contains(text(), '{order.services_requested}')]"))
+            EC.element_to_be_clickable((By.XPATH, f"//label[contains(text(), 'Materials')]"))
         ).click()
 
         WebDriverWait(self.dr, 10).until(
@@ -79,15 +92,24 @@ class IEHPScraper:
             EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Close')]"))
         ).click()
 
-        for service in order.materials_services.split(','):
-            WebDriverWait(self.dr, 5).until(
-                EC.element_to_be_clickable(
-                    (By.XPATH, f"//label[@class='ng-binding' and contains(text(), '{service}')]"))
-            ).click()
+        # for service in order.materials_services.split(','):
+        #     WebDriverWait(self.dr, 5).until(
+        #         EC.element_to_be_clickable(
+        #             (By.XPATH, f"//label[@class='ng-binding' and contains(text(), '{service}')]"))
+        #     ).click()
+
+        WebDriverWait(self.dr, 5).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, f"//label[@class='ng-binding' and contains(text(), 'Lenses')]"))
+        ).click()
+        WebDriverWait(self.dr, 5).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, f"//label[@class='ng-binding' and contains(text(), 'Frames')]"))
+        ).click()
 
         WebDriverWait(self.dr, 10).until(
             EC.element_to_be_clickable((By.NAME, "framesDropdownOptions"))
-        ).send_keys(order.material_options)
+        ).send_keys("Replacement of lost/broken/stolen materials")
 
         WebDriverWait(self.dr, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//input[@name='cpt-sub-2-0-0']"))
@@ -99,9 +121,12 @@ class IEHPScraper:
         WebDriverWait(self.dr, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@ng-click='vc.close()']"))
         ).click()
-        WebDriverWait(self.dr, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//select[@name='qtySelect-sub-2-0-0']"))
-        ).send_keys(order.lens_qty)
+        try:
+            WebDriverWait(self.dr, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//select[@name='qtySelect-sub-2-0-0']"))
+            ).send_keys("2")  # lenses Qty
+        except TimeoutException:
+            pass
 
         WebDriverWait(self.dr, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//input[@name='cpt-sub-2-1-0']"))
@@ -113,9 +138,21 @@ class IEHPScraper:
         WebDriverWait(self.dr, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@ng-click='vc.close()']"))
         ).click()
-        WebDriverWait(self.dr, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//select[@name='qtySelect-sub-2-1-0']"))
-        ).send_keys(order.frame_qty)
+        try:
+            WebDriverWait(self.dr, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//select[@name='qtySelect-sub-2-1-0']"))
+            ).send_keys("1")  # frames Qty
+        except TimeoutException:
+            pass
+
+        oath_checkbox_els = WebDriverWait(self.dr, 1).until(
+            EC.visibility_of_all_elements_located(
+                (By.XPATH,
+                 "//span[contains(text(), ' 1. Member has supplied the provider with a signed statement under')]",
+                 ))
+        )
+        oath_checkbox_els[0].click()
+        oath_checkbox_els[1].click()
 
         self.save_screenshot(order, "screenshot1")
 
