@@ -15,14 +15,17 @@ x-django-build: &django-build
 
 services:
   selenium-hub:
-    image: selenium/hub:3.141.59-20210929
+    image: selenium/hub:4.4.0-20220831
     container_name: optics_rpa-sh
     ports:
+      - "4442:4442"
+      - "4443:4443"
       - "4444:4444"
     <<: *common
 
   chrome:
-    image: selenium/node-chrome:3.141.59-20210929
+    image: selenium/node-chrome:4.4.0-20220831
+    shm_size: 2gb
     container_name: chrome
     volumes:
       - /dev/shm:/dev/shm
@@ -33,21 +36,12 @@ services:
       - HUB_PORT=4444
       - NODE_MAX_INSTANCES=20
       - NODE_MAX_SESSION=20
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
     links:
       - selenium-hub
     <<: *common
-
-  # firefox:
-  #   image: selenium/node-firefox:3.141.59-20210929
-  #   volumes:
-  #     - /dev/shm:/dev/shm
-  #   depends_on:
-  #     - selenium-hub
-  #   environment:
-  #     - HUB_HOST=selenium-hub
-  #     - HUB_PORT=4444
-  #     - NODE_MAX_INSTANCES=3
-  #     - NODE_MAX_SESSION=3
 
   django:
     <<: *django-build

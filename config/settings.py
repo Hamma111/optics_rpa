@@ -187,3 +187,8 @@ from .constance import *
 FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHandler',]
 
 LOGIN_URL = "users:login"
+
+OPTICAL_PIA_USERID = get_env_variable("OPTICAL_PIA_USERID")
+OPTICAL_PIA_PASSWORD = get_env_variable("OPTICAL_PIA_PASSWORD")
+IEHP_LOGIN_ID = get_env_variable("IEHP_LOGIN_ID")
+IEHP_PASSWORD = get_env_variable("IEHP_PASSWORD")
