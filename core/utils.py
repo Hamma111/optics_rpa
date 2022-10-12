@@ -24,7 +24,7 @@ def get_chrome_instance(
     options = Options()
 
     if is_headless:
-        options.add_argument('headless')
+        options.headless = True
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
 

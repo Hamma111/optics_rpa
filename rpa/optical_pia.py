@@ -1,14 +1,16 @@
+import os
+from base64 import b64decode
 from io import BytesIO
-from time import sleep
 from typing import List
 
 from constance import config
 from django.conf import settings
-from django.core.files.images import ImageFile
+from django.core.files.images import ImageFile, File
 from selenium.webdriver.common.by import By
 
 from core.utils import send_keys_to_element, close_alert_pop_ups
 from rpa.models import OpticalPIAOrder
+from rpa.utils import send_cdp_command
 from submissions.choices import StatusType
 
 
@@ -101,9 +103,26 @@ class OpticalPIAScraper:
         self.dr.find_element(By.ID, "chkCertifiedSOC").click()
         self.save_screenshot(order, "screenshot2")
 
+        # TODO: uncomment this line
+        # self.dr.find_element(By.NAME, "butOrderPrescription").click()
+
+        # TODO: remove these lines
+        self.dr.get("https://optical.pia.ca.gov/Pool/ServiceProvider/OrderStatus.aspx")
+        self.dr.find_element(By.NAME, "txtRXNo").send_keys("L751090")
+        self.dr.find_element(By.NAME, "butFindRX").click()
+
+        self.dr.find_element(By.LINK_TEXT, "L751090").click()
+        self.dr.find_element(By.ID, "butPrintRxTop").click()
+
     def place_order(self, order):
         try:
             self._place_order(order)
+
+            self.save_pdf(order)
+
+            order.confirmation_number = self.dr.current_url.split("RXNo=")[-1]
+            order.save(update_fields=["confirmation_number"])
+
             order_submission = order.submission.get(status=StatusType.PENDING)
             order_submission.status = StatusType.SUCCESS
         except Exception as ex:
@@ -112,7 +131,7 @@ class OpticalPIAScraper:
             order_submission.status = StatusType.ERROR
             order_submission.error_text = ex
 
-        order_submission.save(update_fields=["status", "error_text"])
+        order_submission.save(update_fields=["status", "error_text", "modified"])
 
     def place_orders(self, optical_pia_orders: List[OpticalPIAOrder]):
         for index, order in enumerate(optical_pia_orders):
@@ -131,3 +150,25 @@ class OpticalPIAScraper:
         setattr(order_submission, image_field, image)
         order_submission.save(update_fields=[image_field])
 
+    def save_pdf(self, order):
+        print_settings = {
+            "recentDestinations": [{
+                "id": "Save as PDF",
+                "origin": "local",
+                "account": "",
+            }],
+            "selectedDestinationId": "Save as PDF",
+            "version": 2,
+            "isHeaderFooterEnabled": False,
+            "isLandscapeEnabled": True
+        }
+        pdf_data = send_cdp_command(self.dr, "Page.printToPDF", print_settings)
+
+        pdf_file_name = f"/media/{order.id}-{order.subscriber_id}-{order.created}.pdf"
+
+        with open(pdf_file_name, 'wb') as file:
+            file.write(b64decode(pdf_data['data']))
+
+        with open(pdf_file_name, 'rb') as file:
+            order.pdf_file = File(file, name=os.path.basename(file.name))
+            order.save(update_fields=["pdf_file"])

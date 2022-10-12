@@ -2,12 +2,13 @@ from datetime import date
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django_extensions.db.models import TimeStampedModel
 
 from rpa.utils import mutate_optical_pia_order
 from submissions.choices import StatusType
 
 
-class OpticalPIAOrder(models.Model):
+class OpticalPIAOrder(TimeStampedModel):
     subscriber_id = models.CharField(max_length=255)
     subscriber_birthdate = models.CharField(max_length=255)
     service_date = models.CharField(max_length=255)
@@ -45,6 +46,9 @@ class OpticalPIAOrder(models.Model):
     color = models.CharField(max_length=255)
 
     frame_type = models.CharField(max_length=255)
+
+    confirmation_number = models.CharField(max_length=255, null=True, blank=True)
+    pdf_file = models.FileField(null=True, blank=True, upload_to="uploaded-pdf/optical-pia/")
 
     @classmethod
     def object_from_csv_date(cls, csv_data, mutate=True):
@@ -128,7 +132,7 @@ class OpticalPIAOrder(models.Model):
         return order
 
 
-class IEHPOrder(models.Model):
+class IEHPOrder(TimeStampedModel):
     iehp_id = models.CharField(max_length=255)
     appointment_date = models.CharField(max_length=25)
 
