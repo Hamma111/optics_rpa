@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+    <header>
+        <div class="container-fluid">
+            <div class="nav">
+                <div class="nav-left">
+                    <h1>Home</h1>
+                    <ul>
+                        <li><a href="submission-dashboard.html">Submission</a></li>
+                        <li><a class="active" href="submissionFiles-dashboard.html">Submission Files</a></li>
+                    </ul>
+                </div>
+                <div class="nav-right">
+                    <h5>Welcome Preey</h5>
+                    <a href="{% url 'users:logout' %}" class="btn btn-primary">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard">
+        <div class="container">
+            <h1>Dashboard</h1>
+            <h4 class="sub-title">Submission Files</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="w-10">#ID</th>
+                    <th class="w-10">Date</th>
+                    <th class="w-15">Screenshot 1</th>
+                    <th class="w-15">Screenshot 2</th>
+                    <th class="w-15">Error-Screenshot</th>
+                    <th class="w-15">Status</th>
+                    <th>Website</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th class="w-10">1</th>
+                    <td class="w-10">2018-01-01</td>
+                    <td class="w-15">Screenshot 1</td>
+                    <td class="w-15">Screenshot 2</td>
+                    <td class="w-15">Error-Screenshot</td>
+                    <td class="w-15">Pending</td>
+                    <td><a href="http://google.com" target="_blank">http://google.com</a></td>
+                </tr>
+                <tr>
+                    <th class="w-10">2</th>
+                    <td class="w-10">2018-01-01</td>
+                    <td class="w-15">Screenshot 1</td>
+                    <td class="w-15">Screenshot 2</td>
+                    <td class="w-15">Error-Screenshot</td>
+                    <td class="w-15">Pending</td>
+                    <td><a href="http://google.com" target="_blank">http://google.com</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,24 +1,39 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block body %}
-    {% if error_message %}
-        <p class="alert">{{ error_message }}</p>
-    {% endif %}
 
-
-    <form method="post" class="form-inline">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="email">Email address:</label>
-            <input type="email" class="form-control mx-sm-3" placeholder="Enter email" id="email" name="email">
+    <header>
+        <div class="container-fluid">
+            <div class="nav">
+                <div class="nav-left">
+                    <h1>Login</h1>
+                </div>
+                <div class="nav-right">
+                    <a href="login.html" class="btn btn-primary">Login</a>
+                </div>
+            </div>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="pwd">Password:</label>
-            <input type="password" class="form-control mx-sm-3" placeholder="Enter password" id="pwd" name="password">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </header>
+    <div class="login">
+        <div class="container">
+            <div class="box">
 
+                <form method="post">
+                    {% csrf_token %}
+
+                    <h1>Login</h1>
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Password" id="pwd" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

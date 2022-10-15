@@ -48,10 +48,10 @@ INSTALLED_APPS = [
     "django_extensions",
 
     # custom apps
-    "core",
-    "rpa",
-    "users",
-    "submissions",
+    "optics.core",
+    "optics.rpa",
+    "optics.users",
+    "optics.submissions",
 ]
 
 MIDDLEWARE = [
@@ -71,7 +71,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [BASE_DIR / "templates", BASE_DIR / "static"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'django.template.context_processors.static',  # this may cause issue later on
             ],
         },
     },
@@ -192,3 +193,46 @@ OPTICAL_PIA_USERID = get_env_variable("OPTICAL_PIA_USERID")
 OPTICAL_PIA_PASSWORD = get_env_variable("OPTICAL_PIA_PASSWORD")
 IEHP_LOGIN_ID = get_env_variable("IEHP_LOGIN_ID")
 IEHP_PASSWORD = get_env_variable("IEHP_PASSWORD")
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {filename}:{lineno} {funcName} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {asctime} {filename}:{lineno} {funcName} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "debug.log",
+            "formatter": "verbose",
+            "backupCount": 10,
+            "maxBytes": 1024 * 1024 * 100,  # 100 MB
+        },
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+        },
+        "celery": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+        },
+        "blabble": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+        },
+    },
+}
