@@ -2,23 +2,6 @@
 {% load static %}
 
 {% block body %}
-    <header>
-        <div class="container-fluid">
-            <div class="nav">
-                <div class="nav-left">
-                    <h1>Home</h1>
-                    <ul>
-                        <li><a href="submission-dashboard.html">Submission</a></li>
-                        <li><a class="active" href="submissionFiles-dashboard.html">Submission Files</a></li>
-                    </ul>
-                </div>
-                <div class="nav-right">
-                    <h5>Welcome Preey</h5>
-                    <a href="{% url 'users:logout' %}" class="btn btn-primary">Logout</a>
-                </div>
-            </div>
-        </div>
-    </header>
 
     <div class="dashboard">
         <div class="container">
@@ -28,33 +11,77 @@
                 <thead>
                 <tr>
                     <th class="w-10">#ID</th>
+                    <th class="w-10">#Subscriber ID</th>
                     <th class="w-10">Date</th>
                     <th class="w-15">Screenshot 1</th>
                     <th class="w-15">Screenshot 2</th>
                     <th class="w-15">Error-Screenshot</th>
                     <th class="w-15">Status</th>
-                    <th>Website</th>
+                    <th class="w-15">Confirmation Number</th>
+                    <th class="w-15">PDF Link</th>
+                    <th class="w-15">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th class="w-10">1</th>
-                    <td class="w-10">2018-01-01</td>
-                    <td class="w-15">Screenshot 1</td>
-                    <td class="w-15">Screenshot 2</td>
-                    <td class="w-15">Error-Screenshot</td>
-                    <td class="w-15">Pending</td>
-                    <td><a href="http://google.com" target="_blank">http://google.com</a></td>
-                </tr>
-                <tr>
-                    <th class="w-10">2</th>
-                    <td class="w-10">2018-01-01</td>
-                    <td class="w-15">Screenshot 1</td>
-                    <td class="w-15">Screenshot 2</td>
-                    <td class="w-15">Error-Screenshot</td>
-                    <td class="w-15">Pending</td>
-                    <td><a href="http://google.com" target="_blank">http://google.com</a></td>
-                </tr>
+                {% for order_submission in order_submissions %}
+                    <tr>
+                        <th class="w-10">{{ order_submission.id }}</th>
+                        <td class="w-10">{{ order_submission.order.subscriber_id }}</td>
+                        <td class="w-15">{{ order_submission.created }}</td>
+
+                        {% if order_submission.screenshot1 %}
+                            <td class="w-10"><a href="{{ order_submission.screenshot1.url }}" target="_blank"> click
+                                here </a></td>
+                        {% else %}
+                            <td class="w-10"> N/A</td>
+                        {% endif %}
+
+                        {% if order_submission.screenshot2 %}
+                            <td class="w-10"><a href="{{ order_submission.screenshot2.url }}" target="_blank"> click
+                                here </a></td>
+                        {% else %}
+                            <td class="w-10"> N/A</td>
+                        {% endif %}
+
+                        {% if order_submission.error_screenshot %}
+                            <td class="w-10"><a href="{{ order_submission.error_screenshot.url }}" target="_blank">
+                                click here </a></td>
+                        {% else %}
+                            <td class="w-10"> N/A</td>
+                        {% endif %}
+
+                        <td class="w-15">
+                            {% if order_submission.status == "SUCCESS" %}
+                                <p class="text-primary">
+                                    {% elif order_submission.status == "PENDING" %}
+                                <p class="text-warning">
+                                    {% else %}
+                                <p class="text-danger">
+                            {% endif %}
+                            {{ order_submission.status }}</p>
+                        </td>
+
+                        <td class="w-10">{{ order_submission.order.confirmation_number }}</td>
+
+                        {% if order_submission.order.pdf_file %}
+                            <td class="w-10"><a class="text-primary"
+                                                href="{{ order_submission.order.pdf_file.url }}"
+                                                target="_blank">
+                                click here </a></td>
+                        {% else %}
+                            <td class="w-10"><p class="text-danger"> N/A</p></td>
+                        {% endif %}
+                    {% if order_submission.status == "ERROR" %}
+                        <td class="w-10"> <a class="text-warning" href="{% url "submissions:update-optical-pia-order-submission" order_submission.order.id%}" target="_blank">Edit </a> </td>
+                    {% else %}
+                        <td class="w-10"> <a class="text-primary" href="{% url "submissions:detail-optical-pia-order-submission" order_submission.order.id%}" target="_blank">View </a> </td>
+
+                    {% endif %}
+
+                    </tr>
+
+                {% endfor %}
+
                 </tbody>
             </table>
         </div>

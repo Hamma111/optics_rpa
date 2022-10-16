@@ -46,6 +46,9 @@ fcshell:
 %.ipshell:
 	@$($*_compose) exec django python manage.py shell -i ipython
 
+%.shell_plus:
+	@$($*_compose) exec django python manage.py shell_plus
+
 %.attach:
 	@docker attach $*
 

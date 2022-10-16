@@ -31,8 +31,8 @@ class OpticalPIAOrderSubmission(TimeStampedModel):
     error_text = models.CharField(max_length=5000, null=True, blank=True)
     status = models.CharField(max_length=255, choices=StatusType.choices, default=StatusType.PENDING)
 
-    optical_pia_order = models.ForeignKey("rpa.OpticalPIAOrder", on_delete=models.PROTECT, related_name="submissions")
-    submission = models.ForeignKey("submissions.Submission", on_delete=models.PROTECT, related_name="submissions")
+    order = models.OneToOneField("rpa.OpticalPIAOrder", on_delete=models.PROTECT, related_name="optical_pia_submission")
+    submission = models.ForeignKey("submissions.Submission", on_delete=models.PROTECT, related_name="optical_pia_submissions")
 
     def __str__(self):
         return f"{self.submission} | {self.status}"
@@ -44,8 +44,8 @@ class IEHPOrderSubmission(TimeStampedModel):
     error_text = models.CharField(max_length=5000, null=True, blank=True)
     status = models.CharField(max_length=255, choices=StatusType.choices, default=StatusType.PENDING)
 
-    iehp_order = models.ForeignKey("rpa.IEHPOrder", on_delete=models.PROTECT, related_name="submission")
-    submission = models.ForeignKey("submissions.Submission", on_delete=models.PROTECT, related_name="submissions")
+    order = models.OneToOneField("rpa.IEHPOrder", on_delete=models.PROTECT, related_name="iehp_submission")
+    submission = models.ForeignKey("submissions.Submission", on_delete=models.PROTECT, related_name="iehp_submission")
 
     def __str__(self):
         return f"{self.submission} | {self.status}"

@@ -5,9 +5,8 @@ from .models import Submission, OpticalPIAOrderSubmission, IEHPOrderSubmission
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created', 'modified', 'file', 'user', "type")
+    list_display = ('id', 'created', 'modified', 'csv_file', 'user', "website_type")
     list_filter = ('created', 'modified', 'user')
-
 
 
 @admin.register(OpticalPIAOrderSubmission)
@@ -21,7 +20,7 @@ class OpticalPIAOrderSubmissionAdmin(admin.ModelAdmin):
         'status',
         'error_text',
     )
-    list_filter = ('created', 'modified', 'optical_pia_order', 'submission')
+    list_filter = ('created', 'modified', 'order', 'submission')
 
 
 @admin.register(IEHPOrderSubmission)
@@ -34,4 +33,4 @@ class IEHPOrderSubmissionAdmin(admin.ModelAdmin):
         'status',
         'error_text',
     )
-    list_filter = ('created', 'modified', 'iehp_order', 'submission')
+    list_filter = ('created', 'modified', 'order', 'submission')

@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-#bygs457ci5a!dw*=x*kejk-#69yk-62yhvk&-dzi6^ne7p^n$
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(get_env_variable("DEBUG")))
+ENV = get_env_variable("ENV")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -230,7 +231,7 @@ LOGGING = {
             "handlers": ["console", "file"],
             "level": "INFO",
         },
-        "blabble": {
+        "optics": {
             "handlers": ["console", "file"],
             "level": "INFO",
         },

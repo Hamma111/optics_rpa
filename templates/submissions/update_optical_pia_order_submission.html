@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="opticalPIA">
+        <div class="container">
+            <h2 class="title">Optical PIA Order Details</h2>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="subscriberID">Subscriber ID:</label>
+                            <input name="subscriber_id" value="{{ object.subscriber_id }}" type="text" id="subscriberID"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="subscriberBirthDate">Subscriber Birth Date:</label>
+                            <input name="subscriber_birthdate" value="{{ object.subscriber_birthdate }}" type="text"
+                                   id="subscriberBirthDate" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="issueID">Issue Date:</label>
+                            <input name="issue_date" value="{{ object.issue_date }}" type="text" id="issueID"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="serviceDate">Service Date:</label>
+                            <input name="service_date" value="{{ object.service_date }}" type="text" id="serviceDate"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="serviceDate">Gender</label>
+                            <input name="gender" value="{{ object.gender }}" type="text" id="serviceDate"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="materialType">Material Type:</label>
+                            <input name="material_type" value="{{ object.material_type }}" type="text" id="materialType"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="materialType">Focal Options:</label>
+                            <input name="focal_options" value="{{ object.focal_options }}" type="text" id="materialType"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="opticalPIA-field">
+                    <div class="field-wrapper">
+                        <div class="form-group">
+                            <label for="sphereR">Sphere R:</label>
+                            <input name="sphere_r" value="{{ object.sphere_r }}" type="text" id="sphereR"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="sphereL">Sphere L:</label>
+                            <input name="sphere_l" value="{{ object.sphere_l }}" type="text" id="sphereL"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="form-group">
+                            <label for="CylinderR">Cylinder R:</label>
+                            <input name="cylinder_r" value="{{ object.cylinder_r }}" type="text" id="CylinderR"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="CylinderL">Cylinder L:</label>
+                            <input name="cylinder_l" value="{{ object.cylinder_l }}" type="text" id="CylinderL"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="form-group">
+                            <label for="AxisR">Axis R:</label>
+                            <input name="axis_r" value="{{ object.axis_r }}" type="text" id="AxisR"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="AxisL">Axis L:</label>
+                            <input name="axis_l" value="{{ object.axis_l }}" type="text" id="AxisL"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="form-group">
+                            <label for="PuppilaryFarR">Puppilary Far R:</label>
+                            <input name="pupillary_far_r" value="{{ object.pupillary_far_r }}" type="text"
+                                   id="PuppilaryFarR"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="PuppilaryFarL">Puppilary Far L:</label>
+                            <input name="pupillary_far_l" value="{{ object.pupillary_far_l }}" type="text"
+                                   id="PuppilaryFarL"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="form-group">
+                            <label for="DistanceNearR">Distance Near R:</label>
+                            <input name="pupillary_near_r" value="{{ object.pupillary_near_r }}" type="text"
+                                   id="DistanceNearR" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="DistanceNearL">Distance Near L:</label>
+                            <input name="pupillary_near_l" value="{{ object.pupillary_near_l }}" type="text"
+                                   id="DistanceNearL" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row"></div>
+                </div>
+                <div class="opticalPIA-field-2">
+                    <div class="field-wrapper">
+                        <div class="form-group">
+                            <label for="addPowerR">Add Power R:</label>
+                            <input name="add_power_r" value="{{ object.add_power_r }}" type="text" id="addPowerR"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="addPowerL">Add Power L:</label>
+                            <input name="add_power_l" value="{{ object.add_power_l }}" type="text" id="addPowerL"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="form-group">
+                            <label for="segHeightrR">Seg Height R:</label>
+                            <input name="seg_height_r" value="{{ object.seg_height_r }}" type="text" id="segHeightrR"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="segHeightL">Seg Height L:</label>
+                            <input name="seg_height_l" value="{{ object.seg_height_l }}" type="text" id="segHeightL"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="form-group">
+                            <label for="OCHeightR">OC Heighgt R:</label>
+                            <input name="oc_height_r" value="{{ object.oc_height_r }}" type="text" id="OCHeightR"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="OCHeightL">OC Heighgt L:</label>
+                            <input name="oc_height_l" value="{{ object.oc_height_l }}" type="text" id="OCHeightL"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="frameManufucture">Frame Menufacturer:</label>
+                            <input name="frame_manufacturer" value="{{ object.frame_manufacturer }}" type="text"
+                                   id="frameManufucture" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="frameStyle">Frame Style:</label>
+                            <input name="frame_style" value="{{ object.frame_style }}" type="text" id="frameStyle"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="form-group">
+                            <label for="eyeSize">Eye Size:</label>
+                            <input name="eye_size" value="{{ object.eye_size }}" type="text" id="eyeSize"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="form-group">
+                            <label for="bridgeSize">Bridge Size:</label>
+                            <input name="bridge_size" value="{{ object.bridge_size }}" type="text" id="bridgeSize"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="form-group">
+                            <label for="temple">Temple:</label>
+                            <input name="temple_size" value="{{ object.temple_size }}" type="text" id="temple"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="color">Color:</label>
+                            <input name="color" value="{{ object.color }}" type="text" id="color"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="frameType">Frame Type:</label>
+                            <input name="frame_type" value="{{ object.frame_type }}" type="text" id="frameType"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="frameType">Frame Enclosed:</label>
+                            <input name="frame_enclosed" value="{{ object.frame_enclosed }}" type="text" id="frameType"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+
+                <input class="btn btn-primary" type="submit" value="Save & Re-submit">
+            </form>
+
+        </div>
+    </div>
+
+    <br>
+{% endblock %}

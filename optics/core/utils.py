@@ -1,5 +1,6 @@
 from time import sleep
 
+from django.conf import settings
 from selenium.common.exceptions import ElementNotInteractableException, NoAlertPresentException, TimeoutException
 from selenium.webdriver import Keys
 from selenium.webdriver.chrome.options import Options
@@ -8,10 +9,12 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from config.env_utils import ENV
+
 
 def get_chrome_instance(
         is_remote: bool = True,
-        is_headless: bool = False,
+        is_headless: bool = True,
         is_notifications_disabled: bool = True,
 ) -> WebDriver:
     """Returns some fancy options for selenium webdriver which makes the browser look like a real browser and not
@@ -31,12 +34,15 @@ def get_chrome_instance(
     if is_notifications_disabled:
         options.add_argument("--disable-notifications")
 
-    options.add_argument("--disable-blink-features")
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument("--window-size=1280,720")
-    options.add_argument("start-maximized")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    options.add_experimental_option('useAutomationExtension', False)
+    if settings.ENV == ENV.DEV:
+        options.headless = True
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument("--disable-notifications")
+
+        # options = webdriver.ChromeOptions()
+        # options.add_argument("--start-maximized")
+
     if is_remote:
         driver = webdriver.Remote(
             command_executor="http://selenium-hub:4444/wd/hub",

@@ -1,3 +1,4 @@
+import logging
 import os
 from base64 import b64decode
 from io import BytesIO
@@ -12,6 +13,8 @@ from optics.core.utils import send_keys_to_element, close_alert_pop_ups
 from optics.rpa.models import OpticalPIAOrder
 from optics.rpa.utils import send_cdp_command
 from optics.submissions.choices import StatusType
+
+logger = logging.getLogger(__name__)
 
 
 class OpticalPIAScraper:
@@ -43,7 +46,7 @@ class OpticalPIAScraper:
         else:
             raise Exception(f"Invalid Gender value in order {order}")
 
-        self.save_screenshot(order, "screenshot1")
+        self.save_screenshot(order.optical_pia_submission, "screenshot1")
         self.dr.find_element(By.ID, "butVerifyEligibility").click()
 
     def _place_order(self, order):
@@ -101,12 +104,12 @@ class OpticalPIAScraper:
         self.dr.find_element(By.ID, "selFrameMaterial").send_keys(order.frame_type)
 
         self.dr.find_element(By.ID, "chkCertifiedSOC").click()
-        self.save_screenshot(order, "screenshot2")
+        self.save_screenshot(order.optical_pia_submission, "screenshot2")
 
-        # TODO: uncomment this line
+        # TODO: uncomment this line when going live
         # self.dr.find_element(By.NAME, "butOrderPrescription").click()
 
-        # TODO: remove these lines
+        # uncomment these lines for testing purposes
         self.dr.get("https://optical.pia.ca.gov/Pool/ServiceProvider/OrderStatus.aspx")
         self.dr.find_element(By.NAME, "txtRXNo").send_keys("L751090")
         self.dr.find_element(By.NAME, "butFindRX").click()
@@ -115,35 +118,33 @@ class OpticalPIAScraper:
         self.dr.find_element(By.ID, "butPrintRxTop").click()
 
     def place_order(self, order):
+        order_submission = order.optical_pia_submission
         try:
             self._place_order(order)
 
             self.save_pdf(order)
 
             order.confirmation_number = self.dr.current_url.split("RXNo=")[-1]
+            # TODO: Remove this following line when going live
+            order.confirmation_number = "123random123"
             order.save(update_fields=["confirmation_number"])
-
-            order_submission = order.submissions.get(status=StatusType.PENDING)
             order_submission.status = StatusType.SUCCESS
         except Exception as ex:
-            self.save_screenshot(order, "error_screenshot")
-            order_submission = order.submissions.get(status=StatusType.PENDING)
+            logger.error(f"{ex}")
+            self.save_screenshot(order_submission, "error_screenshot")
             order_submission.status = StatusType.ERROR
             order_submission.error_text = ex
 
         order_submission.save(update_fields=["status", "error_text", "modified"])
 
-    def place_orders(self, optical_pia_orders: List[OpticalPIAOrder]):
-        for index, order in enumerate(optical_pia_orders):
+    def place_orders(self, optical_pia_orders: List[OpticalPIAOrder], optical_pia_submissions):
+        for order, order_submission in zip(optical_pia_orders, optical_pia_submissions):
             try:
                 self.place_order(order)
-                self.dr.save_screenshot(f'success_{index}.png')
             except Exception as ex:
-                self.dr.save_screenshot(f'error_{index}.jpg')
+                pass
 
-    def save_screenshot(self, order, image_field):
-        order_submission = order.submissions.get(status=StatusType.PENDING)
-
+    def save_screenshot(self, order_submission, image_field):
         image = self.dr.get_screenshot_as_png()
         image = ImageFile(BytesIO(image), name=f'{order_submission.id}.jpg')
 
@@ -165,7 +166,6 @@ class OpticalPIAScraper:
         pdf_data = send_cdp_command(self.dr, "Page.printToPDF", pdf_settings)
 
         pdf_file_name = f"/media/{order.id}-{order.subscriber_id}-{order.created}.pdf"
-
         with open(pdf_file_name, 'wb') as file:
             file.write(b64decode(pdf_data['data']))
 
