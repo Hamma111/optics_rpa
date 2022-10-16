@@ -34,6 +34,14 @@ class OpticalPIAOrderSubmission(TimeStampedModel):
     order = models.OneToOneField("rpa.OpticalPIAOrder", on_delete=models.PROTECT, related_name="optical_pia_submission")
     submission = models.ForeignKey("submissions.Submission", on_delete=models.PROTECT, related_name="optical_pia_submissions")
 
+    def reset_status(self):
+        self.screenshot1 = None
+        self.screenshot2 = None
+        self.error_screenshot = None
+        self.error_text = None
+        self.status = StatusType.PENDING
+        self.save()
+
     def __str__(self):
         return f"{self.submission} | {self.status}"
 

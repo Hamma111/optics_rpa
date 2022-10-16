@@ -2,12 +2,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from django.views.generic import TemplateView, DetailView, UpdateView
+from django.views.generic import DetailView, UpdateView
 
 from optics.rpa.models import OpticalPIAOrder
 from optics.rpa.tasks import place_optical_pia_order, place_iehp_order, run_automation_optical_pia_order
 from optics.submissions.choices import SubmissionWebsiteType, StatusType
-from optics.submissions.models import Submission, OpticalPIAOrderSubmission
+from optics.submissions.models import Submission
 from optics.submissions.utils import validate_uploaded_file
 
 
@@ -27,7 +27,7 @@ class UploadOpticalPIASubmissionView(LoginRequiredMixin, View):
         )
         place_optical_pia_order.delay(submission.id)
 
-        return render(request, self.template_name)
+        return redirect(reverse("dashboards:submissions_dashboard"))
 
 
 class UploadIEHPSubmissionView(LoginRequiredMixin, View):
@@ -66,10 +66,7 @@ class OpticalPIAOrderSubmissionUpdateView(LoginRequiredMixin, UpdateView):
         ret = super().dispatch(request, *args, **kwargs)
 
         order = self.get_object()
-
-        order_submission = order.optical_pia_submission
-        order_submission.status = StatusType.PENDING
-        order_submission.save(update_fields=["status", "modified"])
+        order.optical_pia_submission.reset_status()
 
         run_automation_optical_pia_order.delay([order.id])
 
