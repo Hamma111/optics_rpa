@@ -161,4 +161,5 @@ node_modules/
 data/
 
 media/
-static/
+#static/
+/misc_utils
