@@ -40,17 +40,48 @@
         <div class="container-fluid">
             <div class="nav">
                 <div class="nav-left">
-                    <h1>Home</h1>
-                    <ul>
+                    <div class="logo">
+                        <a href="{% url 'dashboards:submissions_dashboard' %}"><img src="{% static 'core/main_logo.png' %}" alt="" class="img-fluid"></a>
+                    </div>
+
+                    <ul class="nav-links">
+
                         <li><a class="active" href="{% url 'dashboards:submissions_dashboard' %}">Submission</a></li>
-                        <li><a href="{% url 'submissions:upload-optical-pia-submission' %}">+ New Optical PIA
-                            Submission</a></li>
-                        <li><a href="{% url 'submissions:upload-iehp-submission' %}">+ New IEHP Submission</a></li>
+
+                        <li><a href="{% url 'submissions:upload-optical-pia-submission' %}">
+                            <div class="logo logo-optical-pia">
+                                <img src="{% static 'core/optical_pia_logo.jpg' %}" alt="" class="img-fluid">
+                            </div>
+                            <span>+ New Optical PIA Submission</span>
+                        </a></li>
+
+                        <li><a href="{% url 'submissions:upload-iehp-submission' %}">
+                            <div class="logo logo-iehp">
+                                <img src="{% static 'core/iehp_logo.png' %}" alt="" class="img-fluid">
+                            </div>
+                            <span>+ New IEHP Submission</span>
+                        </a></li>
+
                     </ul>
                 </div>
+
+
                 <div class="nav-right">
                     <h5>Welcome {{ user.get_full_name }}</h5>
                     <a href="{% url 'users:logout' %}" class="btn btn-primary">Logout</a>
+
+                </div>
+            </div>
+        </div>
+    </header>
+{% else %}
+    <header>
+        <div class="container-fluid">
+            <div class="nav">
+                <div class="nav-left">
+                    <div class="logo">
+                        <img src="{% static 'core/main-logo.png' %}" alt="" class="img-fluid">
+                    </div>
                 </div>
             </div>
         </div>
