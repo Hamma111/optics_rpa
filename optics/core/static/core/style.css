@@ -231,6 +231,12 @@ header .nav .nav-left .nav-links .logo-optical-pia {
     box-shadow: none !important;
 }
 
+.login .help-text {
+    text-align: center;
+    position: relative;
+    top: -100px;
+}
+
 .opticalPIA {
     margin-top: 32px;
 }
