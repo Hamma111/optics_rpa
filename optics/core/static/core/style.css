@@ -234,7 +234,26 @@ header .nav .nav-left .nav-links .logo-optical-pia {
 .login .help-text {
     text-align: center;
     position: relative;
-    top: -100px;
+    /*top: -100px;*/
+}
+
+.img-wrapper {
+   display: flex;
+    justify-content: center;
+    margin-top: 48px;
+    margin-bottom: 148px;
+}
+.img-wrapper > div {
+    width: 150px
+}
+
+.img-wrapper > div:first-child {
+    margin-right: 60px;
+}
+
+.img-wrapper > div:first-child img {
+    height: 100%;
+    margin-top: -5px;
 }
 
 .opticalPIA {
