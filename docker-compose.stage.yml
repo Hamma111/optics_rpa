@@ -112,6 +112,7 @@ services:
       - optics_rpa_redis_data:/data
     ports:
       - "6379:6379"
+    command: redis-server --appendonly yes --replica-read-only no
     <<: *common
 
   postgres:
