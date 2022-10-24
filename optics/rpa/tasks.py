@@ -73,6 +73,8 @@ def place_iehp_order(submission_id):
     IEHPOrder.objects.bulk_create(orders, batch_size=1000)
     IEHPOrderSubmission.objects.bulk_create(order_submissions, batch_size=1000)
 
+    run_automation_iehp_order([order.id for order in orders])
+
     submission.status = StatusType.SUCCESS
     for order_submission in order_submissions:
         order_submission.refresh_from_db()
