@@ -11,6 +11,7 @@ def get_env_variable(variable_name):
 
 
 class ENV:
+    TEST = "test"
     DEV = "dev"
     STAGE = "stage"
     PROD = "prod"

@@ -41,25 +41,49 @@
             <div class="nav">
                 <div class="nav-left">
                     <div class="logo">
-                        <a href="{% url 'dashboards:submissions_dashboard' %}"><img src="{% static 'core/main_logo.png' %}" alt="" class="img-fluid"></a>
+                        <a href="{% url 'dashboards:pia_submissions_dashboard' %}"><img
+                                src="{% static 'core/main_logo.png' %}" alt="" class="img-fluid"></a>
                     </div>
 
                     <ul class="nav-links">
 
-                        <li><a class="active" href="{% url 'dashboards:submissions_dashboard' %}">Submission</a></li>
+                        {#                        <li><a class="active" href="{% url 'dashboards:pia_submissions_dashboard' %}">PIA Submission</a></li>#}
+                        {#                        <li><a class="active" href="{% url 'dashboards:iehp_submissions_dashboard' %}">IEHP Submission</a></li>#}
 
-                        <li><a href="{% url 'submissions:upload-optical-pia-submission' %}">
+                        <li><a href="{% url 'dashboards:pia_submissions_dashboard' %}">
                             <div class="logo logo-optical-pia">
                                 <img src="{% static 'core/optical_pia_logo.jpg' %}" alt="" class="img-fluid">
                             </div>
-                            <span>+ New Optical PIA Submission</span>
+
+                            <div class="dropdown">
+                                <a class="btn dropdown-toggle" href="#" role="button"
+                                   id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    PIA Submissions
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="{% url 'dashboards:pia_submissions_dashboard' %}">Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'submissions:upload-optical-pia-submission' %}">New Submission</a></li>
+                                </ul>
+                            </div>
+
                         </a></li>
 
-                        <li><a href="{% url 'submissions:upload-iehp-submission' %}">
+                        <li><a href="{% url 'dashboards:iehp_submissions_dashboard' %}">
                             <div class="logo logo-iehp">
                                 <img src="{% static 'core/iehp_logo.png' %}" alt="" class="img-fluid">
                             </div>
-                            <span>+ New IEHP Submission</span>
+                            <div class="dropdown">
+                                <a class="btn dropdown-toggle" href="#" role="button"
+                                   id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    IEHP Submissions
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="{% url 'dashboards:iehp_submissions_dashboard' %}">Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'submissions:upload-iehp-submission' %}">New Submission</a></li>
+                                </ul>
+                            </div>
                         </a></li>
 
                     </ul>

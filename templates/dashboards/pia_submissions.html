@@ -5,14 +5,37 @@
 
     <div class="dashboard">
         <div class="container">
+
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}?status=SUCCESS&{{ request.GET.urlencode }}">filter#}
+            {#                success</a></div>#}
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}?status=ERROR&{{ request.GET.urlencode }}">filter#}
+            {#                error</a></div>#}
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}?status=PENDING&{{ request.GET.urlencode }}">filter#}
+            {#                pending</a></div>#}
+            {##}
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}?created=2022-10-23&{{ request.GET.urlencode }}">filter#}
+            {#                date</a></div>#}
+            {##}
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}">clear filters</a></div>#}
+
+
+            <form class="search-form-pia" method="get" onsubmit="{% url 'dashboards:pia_submissions_dashboard' %}">
+                <label>
+                    <input class="form-control" name="patient_name" type="text" placeholder="Search by patient name"/>
+                </label>
+                <input class="btn btn-primary" type="submit" value="Search">
+            </form>
+
             <h1>Dashboard</h1>
+
             <h4 class="sub-title">Submission Files</h4>
             <table class="table submissionFilesTable">
                 <thead>
                 <tr>
                     <th class="w-10">#ID</th>
                     <th class="w-10">#Subscriber ID</th>
-                    <th class="w-23">Date</th>
+                    <th class="w-30">Name</th>
+                    <th class="w-40">Date</th>
                     <th class="w-15">Screenshot 1</th>
                     <th class="w-15">Screenshot 2</th>
                     <th class="w-15">Error-Screenshot</th>
@@ -27,7 +50,8 @@
                     <tr>
                         <th class="w-10">{{ order_submission.id }}</th>
                         <td class="w-10">{{ order_submission.order.subscriber_id }}</td>
-                        <td class="w-23">{{ order_submission.created }}</td>
+                        <td class="w-30">{{ order_submission.order.get_patient_name }}</td>
+                        <td class="w-40">{{ order_submission.created }}</td>
 
                         {% if order_submission.screenshot1 %}
                             <td class="w-10"><a href="{{ order_submission.screenshot1.url }}" target="_blank"> click
@@ -71,12 +95,16 @@
                         {% else %}
                             <td class="w-10"><p class="text-danger"> N/A</p></td>
                         {% endif %}
-                    {% if order_submission.status == "ERROR" %}
-                        <td class="w-10"> <a class="text-warning" href="{% url "submissions:update-optical-pia-order-submission" order_submission.order.id%}" target="_blank">Edit </a> </td>
-                    {% else %}
-                        <td class="w-10"> <a class="text-primary" href="{% url "submissions:detail-optical-pia-order-submission" order_submission.order.id%}" target="_blank">View </a> </td>
+                        {% if order_submission.status == "ERROR" %}
+                            <td class="w-10"><a class="text-warning"
+                                                href="{% url "submissions:update-optical-pia-order-submission" order_submission.order.id %}"
+                                                target="_blank">Edit </a></td>
+                        {% else %}
+                            <td class="w-10"><a class="text-primary"
+                                                href="{% url "submissions:detail-optical-pia-order-submission" order_submission.order.id %}"
+                                                target="_blank">View </a></td>
 
-                    {% endif %}
+                        {% endif %}
 
                     </tr>
 

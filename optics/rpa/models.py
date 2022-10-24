@@ -46,8 +46,13 @@ class OpticalPIAOrder(TimeStampedModel):
 
     frame_type = models.CharField(max_length=255)
 
+    patient_name = models.CharField(max_length=255, null=True, blank=True)
+
     confirmation_number = models.CharField(max_length=255, null=True, blank=True)
     pdf_file = models.FileField(null=True, blank=True, upload_to="uploaded-pdf/optical-pia/")
+
+    def get_patient_name(self):
+        return self.patient_name or ""
 
     @classmethod
     def object_from_csv_date(cls, csv_data, mutate=True):

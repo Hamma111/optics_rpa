@@ -49,8 +49,13 @@ class OpticalPIAScraper:
         self.save_screenshot(order.optical_pia_submission, "screenshot1")
         self.dr.find_element(By.ID, "butVerifyEligibility").click()
 
+    def _save_patient_name(self, order):
+        order.patient_name = self.dr.find_element("id", "lblPatientName").text
+        order.save(update_fields=["patient_name"])
+
     def _place_order(self, order):
         self._start_order(order)
+        self._save_patient_name(order)
 
         self.dr.find_element(By.ID, "ddlMaterialType").send_keys(order.material_type)
         close_alert_pop_ups(self.dr, 2, 2, attempt_jumping_to_next_element=False)

@@ -33,6 +33,7 @@ def place_optical_pia_order(submission_id):
 
     submission.status = StatusType.SUCCESS
     for order_submission in order_submissions:
+        order_submission.refresh_from_db()
         if order_submission.status != StatusType.SUCCESS:
             submission.status = StatusType.ERROR
             break
@@ -72,7 +73,19 @@ def place_iehp_order(submission_id):
     IEHPOrder.objects.bulk_create(orders, batch_size=1000)
     IEHPOrderSubmission.objects.bulk_create(order_submissions, batch_size=1000)
 
-    # running automation
+    submission.status = StatusType.SUCCESS
+    for order_submission in order_submissions:
+        order_submission.refresh_from_db()
+        if order_submission.status != StatusType.SUCCESS:
+            submission.status = StatusType.ERROR
+            break
+
+    submission.save(update_fields=["status", "modified"])
+
+
+@app.task
+def run_automation_iehp_order(order_ids):
+    orders = IEHPOrder.objects.filter(id__in=order_ids)
     dr = get_chrome_instance()
 
     iehp_scraper = IEHPScraper(dr)
@@ -82,4 +95,4 @@ def place_iehp_order(submission_id):
     try:
         dr.quit()
     except Exception as ex:
-        logger.error(f"Error closing dr in {submission_id}. Error: {ex}")
+        logger.error(f"Error closing iehp order driver Exception: {ex}. Orders: {orders}.")
