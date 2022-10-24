@@ -4,8 +4,9 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import DetailView, UpdateView
 
-from optics.rpa.models import OpticalPIAOrder
-from optics.rpa.tasks import place_optical_pia_order, place_iehp_order, run_automation_optical_pia_order
+from optics.rpa.models import OpticalPIAOrder, IEHPOrder
+from optics.rpa.tasks import place_optical_pia_order, place_iehp_order, run_automation_optical_pia_order, \
+    run_automation_iehp_order
 from optics.submissions.choices import SubmissionWebsiteType, StatusType
 from optics.submissions.models import Submission
 from optics.submissions.utils import validate_uploaded_file
@@ -27,7 +28,7 @@ class UploadOpticalPIASubmissionView(LoginRequiredMixin, View):
         )
         place_optical_pia_order.delay(submission.id)
 
-        return redirect(reverse("dashboards:submissions_dashboard"))
+        return redirect(f"{reverse('dashboards:pia_submissions_dashboard')}?is_redirected_from_upload_page=true")
 
 
 class UploadIEHPSubmissionView(LoginRequiredMixin, View):
@@ -45,7 +46,7 @@ class UploadIEHPSubmissionView(LoginRequiredMixin, View):
         )
         place_iehp_order.delay(submission.id)
 
-        return redirect(reverse("dashboards:submissions_dashboard"))
+        return redirect(f"{reverse('dashboards:iehp_submissions_dashboard')}?is_redirected_from_upload_page=true")
 
 
 class OpticalPIAOrderSubmissionUpdateView(LoginRequiredMixin, UpdateView):
@@ -60,10 +61,10 @@ class OpticalPIAOrderSubmissionUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "submissions/update_optical_pia_order_submission.html"
 
     def get_success_url(self):
-        return reverse("dashboards:submissions_dashboard")
+        return reverse("dashboards:pia_submissions_dashboard")
 
-    def dispatch(self, request, *args, **kwargs):
-        ret = super().dispatch(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        ret = super().post(request, *args, **kwargs)
 
         order = self.get_object()
         order.optical_pia_submission.reset_status()
@@ -77,3 +78,30 @@ class OpticalPIAOrderSubmissionReadOnlyDetailView(LoginRequiredMixin, DetailView
     model = OpticalPIAOrder
     fields = "__all__"
     template_name = "submissions/detail_optical_pia_order_submission.html"
+
+
+class IEHPOrderSubmissionUpdateView(LoginRequiredMixin, UpdateView):
+    model = IEHPOrder
+    fields = [
+        "iehp_id", "appointment_date", "requesting_provider", "location", "icd_1", "lens_cpt_1", "frame_cpt_1"
+    ]
+    template_name = "submissions/update_iehp_order_submission.html"
+
+    def get_success_url(self):
+        return reverse("dashboards:iehp_submissions_dashboard")
+
+    def post(self, request, *args, **kwargs):
+        ret = super().post(request, *args, **kwargs)
+
+        order = self.get_object()
+        order.iehp_submission.reset_status()
+
+        run_automation_iehp_order.delay([order.id])
+
+        return ret
+
+
+class IEHPOrderSubmissionReadOnlyDetailView(LoginRequiredMixin, DetailView):
+    model = IEHPOrder
+    fields = "__all__"
+    template_name = "submissions/detail_iehp_order_submission.html"

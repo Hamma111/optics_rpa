@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="opticalPIA">
+        <div class="container">
+            <h2 class="title">Optical PIA Order Details</h2>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="subscriberID">IEHP ID:</label>
+                            <input name="iehp_id" value="{{ object.iehp_id }}" type="text" id="iehp_id"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="subscriberBirthDate">Appointment Date:</label>
+                            <input name="appointment_date" value="{{ object.appointment_date }}" type="text"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="issueID">Requesting Provider:</label>
+                            <input name="requesting_provider" value="{{ object.requesting_provider }}"
+                                   type="text"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="serviceDate">Location:</label>
+                            <input name="location" value="{{ object.location }}" type="text"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="serviceDate">ICD 1:</label>
+                            <input name="icd_1" value="{{ object.icd_1 }}" type="text" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="serviceDate">Lens CPT 1:</label>
+                            <input name="lens_cpt_1" value="{{ object.lens_cpt_1 }}" type="text"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="serviceDate">Frame CPT 1:</label>
+                            <input name="frame_cpt_1" value="{{ object.frame_cpt_1 }}" type="text"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+
+                <input class="btn btn-primary" type="submit" value="Save & Re-submit">
+            </form>
+
+        </div>
+    </div>
+
+    <br>
+{% endblock %}

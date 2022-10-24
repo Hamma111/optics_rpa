@@ -156,25 +156,23 @@ class IEHPScraper:
         oath_checkbox_els[0].click()
         oath_checkbox_els[1].click()
 
-        self.save_screenshot(order, "screenshot1")
+        order_submission = order.iehp_submission
+        self.save_screenshot(order_submission, "screenshot1")
 
     def place_vision_referral_requests(self, orders: List[IEHPOrder]):
         for index, order in enumerate(orders):
+            order_submission = order.iehp_submission
             try:
                 self._place_vision_referral_request(order)
-                order_submission = order.submission.get(status=StatusType.PENDING)
                 order_submission.status = StatusType.SUCCESS
             except Exception as ex:
-                self.save_screenshot(order, "error_screenshot")
-                order_submission = order.submission.get(status=StatusType.PENDING)
+                self.save_screenshot(order_submission, "error_screenshot")
                 order_submission.status = StatusType.ERROR
                 order_submission.error_text = ex
 
             order_submission.save(update_fields=["status", "error_text"])
 
-    def save_screenshot(self, order, image_field):
-        order_submission = order.submission.get(status=StatusType.PENDING)
-
+    def save_screenshot(self, order_submission, image_field):
         image = self.dr.get_screenshot_as_png()
         image = ImageFile(BytesIO(image), name=f'{order_submission.id}.jpg')
 

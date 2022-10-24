@@ -34,11 +34,8 @@ def get_chrome_instance(
     if is_notifications_disabled:
         options.add_argument("--disable-notifications")
 
-    if settings.ENV == ENV.DEV:
-        options.headless = True
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument("--disable-notifications")
+    if settings.ENV == ENV.TEST:
+        options.headless = None
 
         # options = webdriver.ChromeOptions()
         # options.add_argument("--start-maximized")

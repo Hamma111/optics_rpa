@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+
+    <div class="dashboard">
+        <div class="container">
+
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}?status=SUCCESS&{{ request.GET.urlencode }}">filter#}
+            {#                success</a></div>#}
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}?status=ERROR&{{ request.GET.urlencode }}">filter#}
+            {#                error</a></div>#}
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}?status=PENDING&{{ request.GET.urlencode }}">filter#}
+            {#                pending</a></div>#}
+            {##}
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}?created=2022-10-23&{{ request.GET.urlencode }}">filter#}
+            {#                date</a></div>#}
+            {##}
+            {#            <div><a href="{% url 'dashboards:pia_submissions_dashboard' %}">clear filters</a></div>#}
+
+
+            <form class="search-form-pia" method="get" onsubmit="{% url 'dashboards:pia_submissions_dashboard' %}">
+                <label>
+{#                    <input class="form-control" name="patient_name" type="text" placeholder="Search by patient name"/>#}
+                </label>
+{#                <input class="btn btn-primary" type="submit" value="Search">#}
+            </form>
+
+            <h1>Dashboard</h1>
+
+            <h4 class="sub-title">Submission Files</h4>
+            <table class="table submissionFilesTable">
+                <thead>
+                <tr>
+                    <th class="w-10">#ID</th>
+                    <th class="w-10">#IEHP ID</th>
+                    <th class="w-40">Date</th>
+                    <th class="w-15">Screenshot 1</th>
+                    <th class="w-15">Error-Screenshot</th>
+                    <th class="w-15">Status</th>
+                    <th class="w-15">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order_submission in order_submissions %}
+                    <tr>
+                        <th class="w-10">{{ order_submission.id }}</th>
+                        <td class="w-10">{{ order_submission.order.iehp_id }}</td>
+                        <td class="w-40">{{ order_submission.created }}</td>
+
+                        {% if order_submission.screenshot1 %}
+                            <td class="w-10"><a href="{{ order_submission.screenshot1.url }}" target="_blank"> click
+                                here </a></td>
+                        {% else %}
+                            <td class="w-10"> N/A</td>
+                        {% endif %}
+
+                        {% if order_submission.error_screenshot %}
+                            <td class="w-10"><a href="{{ order_submission.error_screenshot.url }}" target="_blank">
+                                click here </a></td>
+                        {% else %}
+                            <td class="w-10"> N/A</td>
+                        {% endif %}
+
+                        <td class="w-15">
+                            {% if order_submission.status == "SUCCESS" %}
+                                <p class="text-primary">
+                                    {% elif order_submission.status == "PENDING" %}
+                                <p class="text-warning">
+                                    {% else %}
+                                <p class="text-danger">
+                            {% endif %}
+                            {{ order_submission.status }}</p>
+                        </td>
+
+                        {% if order_submission.status == "ERROR" %}
+                            <td class="w-10"><a class="text-warning"
+                                                href="{% url "submissions:update-iehp-order-submission" order_submission.order.id %}"
+                                                target="_blank">Edit </a></td>
+                        {% else %}
+                            <td class="w-10"><a class="text-primary"
+                                                href="{% url "submissions:detail-iehp-order-submission" order_submission.order.id %}"
+                                                target="_blank">View </a></td>
+
+                        {% endif %}
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -166,7 +166,7 @@ header .nav .nav-left .nav-links .logo-iehp {
 
 header .nav .nav-left .nav-links .logo-optical-pia {
     position: relative;
-    left: 20px;
+    left: 10px;
     width: 140px;
     min-height: 40px;
 }
@@ -192,6 +192,12 @@ header .nav .nav-left .nav-links .logo-optical-pia {
 .table tbody th, .table tbody td {
     padding-top: 24px;
     padding-bottom: 24px;
+}
+
+.search-form-pia {
+    position: relative;
+    left: 80%;
+    bottom: -100px;
 }
 
 /* login  */
@@ -238,11 +244,12 @@ header .nav .nav-left .nav-links .logo-optical-pia {
 }
 
 .img-wrapper {
-   display: flex;
+    display: flex;
     justify-content: center;
     margin-top: 48px;
     margin-bottom: 148px;
 }
+
 .img-wrapper > div {
     width: 150px
 }

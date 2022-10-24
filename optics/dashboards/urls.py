@@ -1,10 +1,10 @@
 from django.urls import path
 
-from optics.dashboards.views import SubmissionsDashboard
-
+from optics.dashboards.views import PIASubmissionsDashboardView, IEHPSubmissionsDashboardView
 
 app_name = "dashboards"
 
 urlpatterns = [
-    path("submissions-dashboard/", SubmissionsDashboard.as_view(), name="submissions_dashboard")
+    path("pia-submissions-dashboard/", PIASubmissionsDashboardView.as_view(), name="pia_submissions_dashboard"),
+    path("iehp-submissions-dashboard/", IEHPSubmissionsDashboardView.as_view(), name="iehp_submissions_dashboard")
 ]
