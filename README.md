@@ -33,3 +33,24 @@ IEHPSubmissionsDashboardView: Displays a dashboard for IEHP order submissions.
 ## Usage
 Navigate to the respective dashboards to view and manage orders.
 Use the automated processes to handle CSV uploads and form submissions.
+
+
+# Technical Documentation
+
+## Tech Stack
+
+### Backend
+
+- Language: Python
+- Backend: Django Rest Framework
+- Task Management Queue: Redis
+- Asynchronous Task: Celery w/ Flower
+- Scheduled Task: Celery Beats
+
+### Cloud
+
+- Cloud: Dockerized. Have Docker and Docker Compose file.
+- Backend WSGI serving: Gunicorn
+- Traffic Handler: NGINX
+
+
