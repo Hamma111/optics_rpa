@@ -1,5 +1,5 @@
 # Project Overview
-This Django project is designed to manage optical and IEHP orders efficiently. It includes functionalities to handle order submissions, process CSV data, and automate form submissions using Selenium.
+This Python Django project is designed to manage optical and IEHP orders efficiently. It includes functionalities to handle order submissions, process CSV data, and automate form submissions using Selenium.
 
 ## Features
 ### Optical Orders Management:
